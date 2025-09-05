@@ -7,5 +7,5 @@ import java.io.Serializable;
 @Embeddable
 public class EnrollmentId implements Serializable {
     private String studentId;
-    private Integer courseId;
+    private String courseId;
 }

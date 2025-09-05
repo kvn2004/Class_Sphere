@@ -1,16 +1,24 @@
 package lk.vihanganimsara.classsphere.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "Subject")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Subject {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer subjectId;
+    @GeneratedValue(generator = "id-generator")
+    @GenericGenerator(name = "id-generator", strategy = "lk.vihanganimsara.classsphere.util.IdGenerator")
+    private String subjectId;
 
     private String subjectName;
     private String gradeLevel;

@@ -43,6 +43,7 @@ public class StudentServiceImpl implements StudentService {
         student.setAddress(dto.getAddress());
         student.setGuardianName(dto.getGuardianName());
         student.setGuardianTelephone(dto.getGuardianTelephone());
+        student.setGuardianEmail(dto.getGuardianEmail());
 
         // unique QR content
         String qrContent = UUID.randomUUID().toString();
@@ -95,6 +96,7 @@ public class StudentServiceImpl implements StudentService {
         student.setAddress(dto.getAddress());
         student.setGuardianName(dto.getGuardianName());
         student.setGuardianTelephone(dto.getGuardianTelephone());
+        student.setGuardianEmail(dto.getGuardianEmail());
 
 
         // 4. Update photo if new one uploaded
