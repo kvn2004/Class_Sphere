@@ -16,5 +16,6 @@ public class StudentDto {
     private String address;
     private String guardianName;
     private String guardianTelephone;
+    private String guardianEmail;
 //    private MultipartFile photo;
 }

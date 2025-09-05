@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Attendance")
@@ -27,6 +29,9 @@ public class Attendance {
 
     @Enumerated(EnumType.STRING)
     private AttendanceStatus status;
+    @OneToMany(mappedBy = "attendance", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AttendanceLog> logs = new ArrayList<>();
+
 
     private LocalDateTime markedAt = LocalDateTime.now();
 }

@@ -26,6 +26,7 @@ public class Student {
     private String address;
     private String guardianName;
     private String guardianTelephone;
+    private String guardianEmail;
 
     @Column(unique = true, nullable = false)
     private String qrCodeContent;

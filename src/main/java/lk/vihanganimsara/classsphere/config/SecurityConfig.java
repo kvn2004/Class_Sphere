@@ -31,9 +31,16 @@ public class SecurityConfig {
                                 "/api/students",
                                 "/api/teachers/register",
                                 "api/teachers/",
-                        "api/teachers",
-                        "api/halls/save",
-                        "/api/halls/update"
+                                "api/teachers",
+                                "api/halls/save",
+                                "/api/halls/update",
+                                "api/subjects/save",
+                                "api/subjects/update",
+                                "api/courses/save",
+                                "api/courses/all",
+                                "api/sessions/save",
+                                "api/sessions/",
+                        "api/attendance/mark"
                         )
                         .permitAll().anyRequest().authenticated())
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

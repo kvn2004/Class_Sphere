@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GeneratorType;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,8 +19,9 @@ import java.util.List;
 @Data
 public class CourseSession {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer sessionId;
+    @GeneratedValue(generator = "id-genarator")
+    @GenericGenerator(name = "id-genarator", strategy = "lk.vihanganimsara.classsphere.util.IdGenerator")
+    private String sessionId;
 
     @ManyToOne
     @JoinColumn(name = "course_id")
