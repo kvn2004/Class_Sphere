@@ -1,0 +1,100 @@
+ body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .brand-title {
+            color: #28a745;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .brand-subtitle {
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .auth-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            margin-top: 2rem;
+            max-width: 450px;
+            width: 100%;
+        }
+        
+        .form-control {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+        
+        .btn-primary {
+            background: #28a745;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .form-label {
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-align: left;
+            display: block;
+        }
+        
+        .auth-link {
+            color: #28a745;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .auth-link:hover {
+            color: #218838;
+            text-decoration: underline;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+            z-index: 10;
+        }
+        
+        .input-group-password {
+            position: relative;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            border: none;
+            padding: 1rem;
+        }
+        
+        .loading-spinner {
+            display: none;
+        }

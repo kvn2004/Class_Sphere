@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management - Dynamic Cards</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .sidebar {
+            background-color: #fff;
+            min-height: 100vh;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .nav-link {
+            color: #6c757d;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 2px 10px;
+        }
+        
+        .nav-link.active {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .nav-link:hover {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+        
+        .nav-link.active:hover {
+            background-color: #218838;
+            color: white;
+        }
+        
+        .student-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .student-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        
+        .student-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .status-badge {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .course-tag {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin: 2px;
+            display: inline-block;
+        }
+        
+        .btn-outline-primary {
+            border-color: #dee2e6;
+            color: #6c757d;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .add-student-btn {
+            background-color: #28a745;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+        }
+        
+        .add-student-btn:hover {
+            background-color: #218838;
+        }
+        
+        .cards-container {
+            min-height: 400px;
+        }
+        
+        .new-card-animation {
+            animation: slideInUp 0.5s ease-out;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .demo-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <div class="p-3">
+                    <h5 class="text-success mb-0">ClassSphere</h5>
+                    <small class="text-muted">Management System</small>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="#"><i class="fas fa-user-graduate me-2"></i> Students</a>
+                    <a class="nav-link" href="#"><i class="fas fa-chalkboard-teacher me-2"></i> Teachers</a>
+                    <a class="nav-link" href="#"><i class="fas fa-book me-2"></i> Courses</a>
+                    <a class="nav-link" href="#"><i class="fas fa-calendar-alt me-2"></i> Sessions</a>
+                    <a class="nav-link" href="#"><i class="fas fa-chart-bar me-2"></i> Attendance</a>
+                    <a class="nav-link" href="#"><i class="fas fa-credit-card me-2"></i> Payments</a>
+                    <a class="nav-link" href="#"><i class="fas fa-chart-line me-2"></i> Reports</a>
+                    <a class="nav-link" href="#"><i class="fas fa-cog me-2"></i> Settings</a>
+                </nav>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="mb-1">Students</h2>
+                        <p class="text-muted mb-0">Manage student information and enrollment</p>
+                    </div>
+                    <button class="btn btn-success add-student-btn" onclick="showAddStudentForm()">
+                        <i class="fas fa-plus me-2"></i>Add Student
+                    </button>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="mb-4">
+                    <div class="input-group" style="max-width: 400px;">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0" placeholder="Search students by name or email...">
+                    </div>
+                </div>
+                
+                <!-- Demo Section -->
+                <div class="demo-section">
+                    <h5 class="mb-3">Demo: Add New Student</h5>
+                    <form id="studentForm" class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="studentName" placeholder="Student Name" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="email" class="form-control" id="studentEmail" placeholder="Email" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="tel" class="form-control" id="studentPhone" placeholder="Phone Number" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="guardianName" placeholder="Guardian Name" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="tel" class="form-control" id="guardianPhone" placeholder="Guardian Phone" required>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-control" id="studentStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <input type="text" class="form-control" id="studentCourses" placeholder="Enrolled Courses (comma separated)">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success">Add Student</button>
+                            <button type="button" class="btn btn-secondary ms-2" onclick="generateRandomStudent()">Generate Random Student</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Students Cards Container -->
+                <div class="row cards-container" id="studentsContainer">
+                    <!-- Existing students will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    
+    <script>
+        // Sample student data (this would come from your backend)
+        let students = [
+            {
+                id: 1,
+                name: "John Doe",
+                email: "john.doe@email.com",
+                phone: "+91 9876543210",
+                guardian: "Robert Doe",
+                guardianPhone: "+91 9876543211",
+                status: "active",
+                courses: ["Mathematics", "Physics"]
+            },
+            {
+                id: 2,
+                name: "Sarah Khan",
+                email: "sarah.khan@email.com",
+                phone: "+91 9876543212",
+                guardian: "Ahmed Khan",
+                guardianPhone: "+91 9876543213",
+                status: "active",
+                courses: ["Chemistry", "Biology"]
+            },
+            {
+                id: 3,
+                name: "Michael Johnson",
+                email: "michael.j@email.com",
+                phone: "+91 9876543214",
+                guardian: "David Johnson",
+                guardianPhone: "+91 9876543215",
+                status: "inactive",
+                courses: ["English", "History"]
+            }
+        ];
+
+        // Generate avatar color based on name
+        function getAvatarColor(name) {
+            const colors = ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6f42c1', '#fd7e14'];
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) {
+                hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return colors[Math.abs(hash) % colors.length];
+        }
+
+        // Get initials from name
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').toUpperCase();
+        }
+
+        // Generate student card HTML
+        function generateStudentCard(student) {
+            const avatarColor = getAvatarColor(student.name);
+            const initials = getInitials(student.name);
+            const statusClass = student.status === 'active' ? 'status-active' : 'status-inactive';
+            
+            const courseTags = student.courses.map(course => 
+                `<span class="course-tag">${course}</span>`
+            ).join('');
+
+            return `
+                <div class="col-lg-4 col-md-6" data-student-id="${student.id}">
+                    <div class="card student-card new-card-animation">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start justify-content-between mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="student-avatar" style="background-color: ${avatarColor}">
+                                        ${initials}
+                                    </div>
+                                    <div class="ms-3">
+                                        <h5 class="card-title mb-1">${student.name}</h5>
+                                        <span class="status-badge ${statusClass}">${student.status}</span>
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="deleteStudent(${student.id})"><i class="fas fa-trash me-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center text-muted mb-1">
+                                    <i class="fas fa-envelope me-2"></i>
+                                    <small>${student.email}</small>
+                                </div>
+                                <div class="d-flex align-items-center text-muted">
+                                    <i class="fas fa-phone me-2"></i>
+                                    <small>${student.phone}</small>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted d-block mb-1">Guardian</small>
+                                <div class="d-flex align-items-center text-muted mb-1">
+                                    <i class="fas fa-user me-2"></i>
+                                    <small>${student.guardian}</small>
+                                </div>
+                                <div class="d-flex align-items-center text-muted">
+                                    <i class="fas fa-phone me-2"></i>
+                                    <small>${student.guardianPhone}</small>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted d-block mb-2">Enrolled Courses</small>
+                                <div>
+                                    ${courseTags}
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-primary btn-sm flex-fill">View Profile</button>
+                                <button class="btn btn-outline-primary btn-sm flex-fill">Generate QR</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render all students
+        function renderStudents() {
+            const container = $('#studentsContainer');
+            container.empty();
+            
+            students.forEach(student => {
+                container.append(generateStudentCard(student));
+            });
+        }
+
+        // Add new student
+        function addStudent(studentData) {
+            // Generate new ID
+            const newId = Math.max(...students.map(s => s.id), 0) + 1;
+            studentData.id = newId;
+            
+            // Add to students array
+            students.push(studentData);
+            
+            // Generate and append new card with animation
+            const newCard = $(generateStudentCard(studentData));
+            $('#studentsContainer').append(newCard);
+            
+            // Scroll to new card
+            $('html, body').animate({
+                scrollTop: newCard.offset().top - 100
+            }, 500);
+        }
+
+        // Delete student
+        function deleteStudent(studentId) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                // Remove from array
+                students = students.filter(s => s.id !== studentId);
+                
+                // Remove card with animation
+                const card = $(`[data-student-id="${studentId}"]`);
+                card.fadeOut(300, function() {
+                    $(this).remove();
+                });
+            }
+        }
+
+        // Handle form submission
+        $('#studentForm').on('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: $('#studentName').val(),
+                email: $('#studentEmail').val(),
+                phone: $('#studentPhone').val(),
+                guardian: $('#guardianName').val(),
+                guardianPhone: $('#guardianPhone').val(),
+                status: $('#studentStatus').val(),
+                courses: $('#studentCourses').val().split(',').map(c => c.trim()).filter(c => c)
+            };
+            
+            // Validate required fields
+            if (!formData.name || !formData.email || !formData.phone || !formData.guardian || !formData.guardianPhone) {
+                alert('Please fill all required fields');
+                return;
+            }
+            
+            // Add student
+            addStudent(formData);
+            
+            // Reset form
+            this.reset();
+            
+            // Show success message
+            alert('Student added successfully!');
+        });
+
+        // Generate random student for demo
+        function generateRandomStudent() {
+            const names = ['Alice Smith', 'Bob Wilson', 'Carol Davis', 'David Brown', 'Eva Garcia', 'Frank Miller'];
+            const guardianNames = ['Mary Smith', 'Tom Wilson', 'Lisa Davis', 'James Brown', 'Anna Garcia', 'Steve Miller'];
+            const courses = [
+                ['Mathematics', 'Physics'],
+                ['Chemistry', 'Biology'],
+                ['English', 'History'],
+                ['Computer Science', 'Mathematics'],
+                ['Art', 'Music'],
+                ['Geography', 'Economics']
+            ];
+            
+            const randomIndex = Math.floor(Math.random() * names.length);
+            const randomName = names[randomIndex];
+            const randomGuardian = guardianNames[randomIndex];
+            const randomCourses = courses[Math.floor(Math.random() * courses.length)];
+            const randomId = Math.floor(Math.random() * 1000) + 100;
+            
+            $('#studentName').val(randomName);
+            $('#studentEmail').val(`${randomName.toLowerCase().replace(' ', '.')}@email.com`);
+            $('#studentPhone').val(`+91 98765${randomId}`);
+            $('#guardianName').val(randomGuardian);
+            $('#guardianPhone').val(`+91 98765${randomId + 1}`);
+            $('#studentStatus').val(Math.random() > 0.3 ? 'active' : 'inactive');
+            $('#studentCourses').val(randomCourses.join(', '));
+        }
+
+        // Show add student form (placeholder function)
+        function showAddStudentForm() {
+            $('html, body').animate({
+                scrollTop: $('.demo-section').offset().top - 20
+            }, 500);
+        }
+
+        // Initialize on page load
+        $(document).ready(function() {
+            renderStudents();
+            
+            // Handle sidebar navigation clicks
+            $('.nav-link').on('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all nav links
+                $('.nav-link').removeClass('active');
+                
+                // Add active class to clicked nav link
+                $(this).addClass('active');
+                
+                // Get the section name
+                const section = $(this).data('section');
+                
+                // Show the corresponding content section
+                showSection(section);
+            });
+        });
+
+        // Function to show specific section
+        function showSection(sectionName) {
+            // Hide all content sections
+            $('.content-section').removeClass('active section-fade-in');
+            
+            // Show the selected section with animation
+            setTimeout(() => {
+                $(`#${sectionName}Section`).addClass('active section-fade-in');
+            }, 100);
+            
+            // Update URL without page reload
+            if (history.pushState) {
+                const newUrl = `${window.location.pathname}?section=${sectionName}`;
+                history.pushState({ section: sectionName }, '', newUrl);
+            }
+        }
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', function(e) {
+            if (e.state && e.state.section) {
+                // Remove active class from all nav links
+                $('.nav-link').removeClass('active');
+                
+                // Add active class to the correct nav link
+                $(`.nav-link[data-section="${e.state.section}"]`).addClass('active');
+                
+                // Show the section
+                showSection(e.state.section);
+            }
+        });
+
+        // Placeholder functions for other sections
+        function addNewTeacher() {
+            alert('Add Teacher functionality - Connect to your backend API');
+        }
+
+        function addNewCourse() {
+            alert('Add Course functionality - Connect to your backend API');
+        }
+
+        function addNewSession() {
+            alert('Add Session functionality - Connect to your backend API');
+        }
+
+        function markAttendance() {
+            alert('Mark Attendance functionality - Connect to your backend API');
+        }
+
+        function addPayment() {
+            alert('Add Payment functionality - Connect to your backend API');
+        }
+
+        function generateReport() {
+            alert('Generate Report functionality - Connect to your backend API');
+        }
+
+        // API integration functions (customize for your backend)
+        
+        // Fetch students from backend
+        async function fetchStudentsFromBackend() {
+            try {
+                // Replace with your actual API endpoint
+                const response = await fetch('/api/students');
+                const studentsData = await response.json();
+                students = studentsData;
+                renderStudents();
+            } catch (error) {
+                console.error('Error fetching students:', error);
+            }
+        }
+
+        // Save student to backend
+        async function saveStudentToBackend(studentData) {
+            try {
+                const response = await fetch('/api/students', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(studentData)
+                });
+                
+                if (response.ok) {
+                    const newStudent = await response.json();
+                    addStudent(newStudent);
+                    return true;
+                } else {
+                    throw new Error('Failed to save student');
+                }
+            } catch (error) {
+                console.error('Error saving student:', error);
+                alert('Error saving student. Please try again.');
+                return false;
+            }
+        }
+
+        // WebSocket connection for real-time updates (optional)
+        function initializeWebSocket() {
+            const ws = new WebSocket('ws://your-websocket-server');
+            
+            ws.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                
+                if (data.type === 'student_added') {
+                    addStudent(data.student);
+                } else if (data.type === 'student_updated') {
+                    // Handle student update
+                    const index = students.findIndex(s => s.id === data.student.id);
+                    if (index !== -1) {
+                        students[index] = data.student;
+                        renderStudents();
+                    }
+                } else if (data.type === 'student_deleted') {
+                    // Handle student deletion
+                    deleteStudent(data.studentId);
+                }
+            };
+            
+            ws.onerror = function(error) {
+                console.error('WebSocket error:', error);
+            };
+        }
+        
+        // Uncomment to enable WebSocket
+        // initializeWebSocket();
+    </script>
+</body>
+</html>
