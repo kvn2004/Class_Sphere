@@ -1,0 +1,365 @@
+<!-- Student Profile Modal -->
+<div
+  class="modal fade"
+  id="studentProfileModal"
+  tabindex="-1"
+  aria-labelledby="studentProfileModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="studentProfileModalLabel">
+          Student Profile
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="studentProfileForm">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-2 text-center">
+              <img
+                id="profilePhoto"
+                src=""
+                alt="Profile Photo"
+                class="img-thumbnail mb-2"
+                style="width: 96px; height: 96px; object-fit: cover"
+              />
+            </div>
+            <div class="col-md-8">
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <label class="form-label">Student ID</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="profileId"
+                    readonly
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Name</label>
+                  <input type="text" class="form-control" id="profileName" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" id="profileEmail" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Telephone</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="profileTelephone"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Address</label>
+                  <input type="text" class="form-control" id="profileAddress" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Guardian Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="profileGuardianName"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Guardian Telephone</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="profileGuardianTelephone"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Guardian Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="profileGuardianEmail"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2 text-center">
+              <img
+                id="profileQr"
+                src=""
+                alt="QR Code"
+                class="img-thumbnail mb-2"
+                style="width: 96px; height: 96px; object-fit: contain"
+              />
+            </div>
+          </div>
+          <div class="mt-4 d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary" id="printIdCardBtn">
+              Print
+            </button>
+            <button type="button" class="btn btn-danger" id="deleteStudentBtn">
+              Delete
+            </button>
+            <button type="submit" class="btn btn-primary" id="updateStudentBtn">
+              Update
+            </button>
+          </div>
+          <!-- Hidden printable ID card template -->
+          <div id="printableIdCard" style="display: none">
+            <div
+              style="
+                width: 340px;
+                border: 1px solid #ccc;
+                border-radius: 12px;
+                padding: 16px;
+                font-family: sans-serif;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                "
+              >
+                <img
+                  id="printProfilePhoto"
+                  src=""
+                  alt="Profile Photo"
+                  style="
+                    width: 64px;
+                    height: 64px;
+                    border-radius: 8px;
+                    object-fit: cover;
+                  "
+                />
+                <img
+                  id="printProfileQr"
+                  src=""
+                  alt="QR Code"
+                  style="width: 64px; height: 64px; object-fit: contain"
+                />
+              </div>
+              <h4
+                id="printName"
+                style="margin: 12px 0 4px 0; font-size: 1.2rem"
+              ></h4>
+              <div style="font-size: 0.95rem">
+                <div><b>ID:</b> <span id="printId"></span></div>
+                <div><b>Email:</b> <span id="printEmail"></span></div>
+                <div><b>Phone:</b> <span id="printTelephone"></span></div>
+                <div><b>Address:</b> <span id="printAddress"></span></div>
+                <div><b>Guardian:</b> <span id="printGuardianName"></span></div>
+                <div>
+                  <b>Guardian Phone:</b>
+                  <span id="printGuardianTelephone"></span>
+                </div>
+                <div>
+                  <b>Guardian Email:</b> <span id="printGuardianEmail"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Students | ClassSphere</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/student.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar vh-100">
+          <div id="sidebar"></div>
+        </nav>
+        <!-- Main Content -->
+        <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4">
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <div>
+              <h2 class="fw-bold">Students</h2>
+              <p class="text-muted">
+                Manage student information and enrollment
+              </p>
+            </div>
+            <button id="addStudentBtn" class="btn btn-success px-4">
+              <i class="bi bi-plus"></i> Add Student
+            </button>
+          </div>
+          <!-- Search Bar -->
+          <div class="mb-4">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search students by name or email..."
+            />
+          </div>
+          <!-- Student Cards -->
+          <div class="row g-4" id="studentsContainer">
+            <!-- Student cards will be dynamically inserted here by JS -->
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div
+      class="modal fade"
+      id="addStudentModal"
+      tabindex="-1"
+      aria-labelledby="addStudentModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addStudentModalLabel">Add Student</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addStudentForm" enctype="multipart/form-data">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="studentPhoto" class="form-label">Photo</label>
+                  <input
+                    class="form-control"
+                    type="file"
+                    id="studentPhoto"
+                    accept="image/*"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="studentName" class="form-label"
+                    >Student Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="studentName"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="studentEmail" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="studentEmail"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="studentPhone" class="form-label">Telephone</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="studentPhone"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="studentAddress" class="form-label">Address</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="studentAddress"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="guardianName" class="form-label"
+                    >Guardian Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="guardianName"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="guardianTelephone" class="form-label"
+                    >Guardian Telephone</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="guardianTelephone"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="guardianEmail" class="form-label"
+                    >Guardian Email</label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="guardianEmail"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="mt-3">
+                <button type="submit" class="btn btn-success w-100">
+                  Add Student
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS, jQuery, and custom JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      $(function () {
+        $("#sidebar").load("sidebar.html", function () {
+          // Highlight the active link
+          $("#sidebar .nav-link").each(function () {
+            if (window.location.pathname.endsWith($(this).attr("href"))) {
+              $(this).addClass("active");
+            } else {
+              $(this).removeClass("active");
+            }
+          });
+        });
+      });
+    </script>
+    <script src="../js/student.js"></script>
+  </body>
+</html>

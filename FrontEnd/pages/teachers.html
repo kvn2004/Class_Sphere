@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teachers | ClassSphere</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/teachers.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar vh-100">
+          <div id="sidebar"></div>
+        </nav>
+        <!-- Main Content -->
+        <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4">
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <div>
+              <h2 class="fw-bold">Teachers</h2>
+              <p class="text-muted">
+                Manage teaching staff and their assignments
+              </p>
+            </div>
+            <button id="addTeacherBtn" class="btn btn-success px-4">
+              <i class="bi bi-plus"></i> Add Teacher
+            </button>
+          </div>
+          <!-- Search Bar -->
+          <div class="mb-4">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search teachers by name, email, or subject..."
+            />
+          </div>
+          <!-- Teacher Cards -->
+          <div class="row g-4" id="teachersContainer">
+            <!-- Teacher cards will be dynamically inserted here by JS -->
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Add Teacher Modal -->
+    <div
+      class="modal fade"
+      id="addTeacherModal"
+      tabindex="-1"
+      aria-labelledby="addTeacherModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addTeacherModalLabel">Add Teacher</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addTeacherForm" enctype="multipart/form-data">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="teacherPhoto" class="form-label">Photo</label>
+                  <input
+                    class="form-control"
+                    type="file"
+                    id="teacherPhoto"
+                    accept="image/*"
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="teacherName" class="form-label">Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="teacherName"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="teacherEmail" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="teacherEmail"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="teacherPhone" class="form-label">Phone</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="teacherPhone"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="teacherAddress" class="form-label">Address</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="teacherAddress"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="mt-3">
+                <button type="submit" class="btn btn-success w-100">
+                  Add Teacher
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Teacher Profile Modal -->
+    <div
+      class="modal fade"
+      id="teacherProfileModal"
+      tabindex="-1"
+      aria-labelledby="teacherProfileModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="teacherProfileModalLabel">
+              Teacher Profile
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="teacherProfileForm">
+              <div class="row g-3 align-items-center">
+                <div class="col-md-2 text-center">
+                  <img
+                    id="teacherProfilePhoto"
+                    src=""
+                    alt="Profile Photo"
+                    class="img-thumbnail mb-2"
+                    style="width: 96px; height: 96px; object-fit: cover"
+                  />
+                </div>
+                <div class="col-md-8">
+                  <div class="row g-2">
+                    <div class="col-md-6">
+                      <label class="form-label">Teacher ID</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="profileTeacherId"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="profileTeacherName"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Email</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="profileTeacherEmail"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Phone</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="profileTeacherPhone"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Address</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="profileTeacherAddress"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2 text-center">
+                  <img
+                    id="teacherProfileQr"
+                    src=""
+                    alt="QR Code"
+                    class="img-thumbnail mb-2"
+                    style="width: 96px; height: 96px; object-fit: contain"
+                  />
+                </div>
+              </div>
+              <div class="mt-4 d-flex justify-content-end gap-2">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  id="printTeacherIdCardBtn"
+                >
+                  Print
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  id="deleteTeacherBtn"
+                >
+                  Delete
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  id="updateTeacherBtn"
+                >
+                  Update
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden printable ID card template -->
+    <div id="printableTeacherIdCard" style="display: none">
+      <div
+        style="
+          width: 340px;
+          border: 1px solid #ccc;
+          border-radius: 12px;
+          padding: 16px;
+          font-family: sans-serif;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <img
+            id="printTeacherProfilePhoto"
+            src=""
+            alt="Profile Photo"
+            style="
+              width: 64px;
+              height: 64px;
+              border-radius: 8px;
+              object-fit: cover;
+            "
+          />
+          <img
+            id="printTeacherProfileQr"
+            src=""
+            alt="QR Code"
+            style="width: 64px; height: 64px; object-fit: contain"
+          />
+        </div>
+        <h4
+          id="printTeacherName"
+          style="margin: 12px 0 4px 0; font-size: 1.2rem"
+        ></h4>
+        <div style="font-size: 0.95rem">
+          <div><b>ID:</b> <span id="printTeacherId"></span></div>
+          <div><b>Email:</b> <span id="printTeacherEmail"></span></div>
+          <div><b>Phone:</b> <span id="printTeacherPhone"></span></div>
+          <div><b>Address:</b> <span id="printTeacherAddress"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS, jQuery, and custom JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      $(function () {
+        $("#sidebar").load("sidebar.html", function () {
+          // Highlight the active link
+          $("#sidebar .nav-link").each(function () {
+            if (window.location.pathname.endsWith($(this).attr("href"))) {
+              $(this).addClass("active");
+            } else {
+              $(this).removeClass("active");
+            }
+          });
+        });
+      });
+    </script>
+    <script src="../js/teachers.js"></script>
+  </body>
+</html>

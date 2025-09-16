@@ -1,0 +1,38 @@
+/* Custom styles for teachers page */
+.avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e6f4ea;
+}
+.card {
+    border-radius: 1rem;
+}
+.card .badge {
+    font-size: 0.85em;
+    margin-right: 0.25em;
+}
+.card .btn {
+    min-width: 0;
+}
+.sidebar {
+    min-height: 100vh;
+    border-right: 1px solid #eee;
+}
+.sidebar .nav-link.active {
+    background: #e6f4ea;
+    color: #198754;
+    font-weight: 600;
+}
+.sidebar .nav-link {
+    color: #333;
+    margin-bottom: 0.5em;
+}
+.sidebar .nav-link:hover {
+    background: #f8f9fa;
+    color: #198754;
+}
