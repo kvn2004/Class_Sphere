@@ -1,0 +1,9 @@
+/* Custom styles for subjects page */
+.subject-card {
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 1.5rem;
+}
+.subject-card .btn {
+    min-width: 0;
+}

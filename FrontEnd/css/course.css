@@ -1,0 +1,24 @@
+/* Custom styles for course page */
+.course-card {
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 1.5rem;
+}
+.course-card .btn {
+    min-width: 0;
+}
+.course-status {
+    font-size: 0.95em;
+    font-weight: 600;
+    padding: 0.2em 0.8em;
+    border-radius: 1em;
+    margin-left: 0.5em;
+}
+.course-status.active {
+    background: #e6f4ea;
+    color: #198754;
+}
+.course-status.inactive {
+    background: #f8d7da;
+    color: #842029;
+}

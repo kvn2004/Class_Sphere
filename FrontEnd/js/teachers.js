@@ -60,10 +60,11 @@ $(document).ready(function () {
                 // Handle success
                 console.log("Teacher added successfully:", response);
                 fetchAndRenderTeachers(); // Refresh the teacher list
-
+                Swal.fire('Success', 'Teacher added successfully!', 'success');
             },
             error: function (xhr, status, error) {
                 console.error("Error adding teacher:", error);
+                Swal.fire('Error', 'Failed to add teacher.', 'error');
             }
         });
         this.reset();
@@ -98,6 +99,7 @@ $(document).ready(function () {
         window.print();
         document.body.innerHTML = originalContents;
         location.reload();
+        Swal.fire('Printed', 'ID Card sent to printer.', 'success');
     });
 
     // Update and Delete button handlers (demo)
@@ -133,18 +135,43 @@ $(document).ready(function () {
                 console.log("Teacher updated successfully:", response);
                 fetchAndRenderTeachers();
                 $("#teacherProfileModal").modal("hide");
-
+                Swal.fire('Success', 'Teacher updated successfully!', 'success');
             },
             error: function (xhr, status, error) {
                 console.error("Error updating teacher:", error);
+                Swal.fire('Error', 'Failed to update teacher.', 'error');
             }
         });
     });
     $(document).on("click", "#deleteTeacherBtn", function () {
-        if (confirm("Are you sure you want to delete this teacher?")) {
-            alert("Delete teacher (implement AJAX call)");
-            $("#teacherProfileModal").modal("hide");
-        }
+        var teacherId = $("#teacherProfileForm").data("teacherId");
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "http://localhost:8080/api/teachers/" + teacherId,
+                    type: "DELETE",
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                    success: function (response) {
+                        Swal.fire('Deleted!', 'Teacher ' + teacherId + ' deleted successfully.', 'success');
+                        $("#teacherProfileModal").modal("hide");
+                        fetchAndRenderTeachers();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error deleting teacher:", xhr.responseText);
+                        Swal.fire('Error', 'Error deleting teacher ' + teacherId + ': ' + error, 'error');
+                    }
+                });
+            }
+        });
+
     });
 });
 

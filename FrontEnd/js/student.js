@@ -275,26 +275,33 @@ function fetchAndRenderStudents() {
 
     $(document).on("click", "#deleteStudentBtn", function () {
         var studentId = $("#studentProfileForm").data("studentId");
-        if (confirm("Are you sure you want to delete this student?")) {
-            $.ajax({
-                url: "http://localhost:8080/api/students/" + studentId,
-                type: "DELETE",
-                headers: {
-                    Authorization: "Bearer " + token,
-                },
-                success: function (response) {
-                    alert("Student " + studentId + " deleted successfully.");
-                    $("#studentProfileModal").modal("hide");
-                    // Optionally refresh the student list
-                    location.reload();
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error deleting student:", xhr.responseText);
-                    alert("Error deleting student " + studentId + ": " + error);
-                }
-            });
-
-        }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "http://localhost:8080/api/students/" + studentId,
+                    type: "DELETE",
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                    success: function (response) {
+                        Swal.fire('Deleted!', 'Student ' + studentId + ' deleted successfully.', 'success');
+                        $("#studentProfileModal").modal("hide");
+                        // Optionally refresh the student list
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error deleting student:", xhr.responseText);
+                        Swal.fire('Error', 'Error deleting student ' + studentId + ': ' + error, 'error');
+                    }
+                });
+            }
+        });
     });
 }
 
