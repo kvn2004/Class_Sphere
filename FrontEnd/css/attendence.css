@@ -1,0 +1,57 @@
+body {
+    background: #f8fafc;
+}
+#sidebar-container {
+    min-height: 100vh;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+}
+.card {
+    border-radius: 1rem;
+}
+.card .display-6 {
+    font-size: 2.5rem;
+}
+.table thead th {
+    background: #f1f5f9;
+    font-weight: 600;
+}
+.table td, .table th {
+    vertical-align: middle;
+}
+.badge-status {
+    font-size: 0.95em;
+    padding: 0.4em 0.8em;
+    border-radius: 1em;
+}
+.badge-present {
+    background: #d1fae5;
+    color: #059669;
+}
+.badge-absent {
+    background: #fee2e2;
+    color: #dc2626;
+}
+.badge-late {
+    background: #fef9c3;
+    color: #ca8a04;
+}
+#studentsList .student-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+}
+#studentsList .student-row .student-name {
+    font-weight: 500;
+}
+#studentsList .student-row .student-code {
+    font-size: 0.95em;
+    color: #6b7280;
+}
+#studentsList .form-select {
+    width: 120px;
+}

@@ -99,15 +99,29 @@
             </div>
           </div>
           <div class="mt-4 d-flex justify-content-end gap-2">
-            <button type="button" class="btn btn-secondary" id="printIdCardBtn">
-              Print
-            </button>
-            <button type="button" class="btn btn-danger" id="deleteStudentBtn">
-              Delete
-            </button>
-            <button type="submit" class="btn btn-primary" id="updateStudentBtn">
-              Update
-            </button>
+            <button type="button" class="btn btn-secondary" id="printIdCardBtn">Print</button>
+            <button type="button" class="btn btn-danger" id="deleteStudentBtn">Delete</button>
+            <button type="submit" class="btn btn-primary" id="updateStudentBtn">Update</button>
+          </div>
+          <!-- Enroll in Course Section -->
+          <div class="mt-4">
+            <h6>Enroll in Course</h6>
+            <div class="row g-2 align-items-end">
+              <div class="col-md-6">
+                <label class="form-label">Course</label>
+                <select class="form-select" id="enrollCourseSelect">
+                  <option value="">Select course</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Enrolled On</label>
+                <input type="date" class="form-control" id="enrollDate">
+              </div>
+              <div class="col-md-2">
+                <button type="button" class="btn btn-success w-100" id="enrollBtn">Enroll</button>
+              </div>
+            </div>
+          </div>
           </div>
           <!-- Hidden printable ID card template -->
           <div id="printableIdCard" style="display: none">
@@ -187,6 +201,12 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
       rel="stylesheet"
     />
+    <!-- SweetAlert2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/dashboard.css" />
     <link rel="stylesheet" href="../css/student.css" />

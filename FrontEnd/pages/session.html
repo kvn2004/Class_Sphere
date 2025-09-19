@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sessions | ClassSphere</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="../css/session.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar vh-100 p-0">
+            <div id="sidebar-container"></div>
+        </nav>
+        <!-- Main Content -->
+        <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <div>
+                    <h2 class="fw-bold">Sessions</h2>
+                    <p class="text-muted">Manage class schedules and timetables</p>
+                </div>
+                <button id="scheduleSessionBtn" class="btn btn-success px-4"><i class="bi bi-plus"></i> Schedule Session</button>
+            </div>
+            <!-- Weekly Schedule Placeholder -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="fw-bold mb-3"><i class="bi bi-calendar-event me-2"></i>Weekly Schedule</h4>
+                    <div id="weeklySchedule" class="d-flex justify-content-between align-items-center mb-2"></div>
+                </div>
+            </div>
+            <!-- Recent Sessions -->
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="fw-bold mb-3">Recent Sessions</h4>
+                    <div class="text-muted mb-2">Latest scheduled and completed sessions</div>
+                    <div id="recentSessions"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Schedule Session Modal -->
+<div class="modal fade" id="sessionModal" tabindex="-1" aria-labelledby="sessionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title" id="sessionModalLabel">Schedule New Session</h5>
+          <div class="text-muted small">Add a new class session to the timetable.</div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="sessionForm">
+          <div class="mb-3">
+            <label for="sessionCourse" class="form-label">Course</label>
+            <select class="form-select" id="sessionCourse" required>
+              <option value="">Select course</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="sessionDate" class="form-label">Date</label>
+            <input type="date" class="form-control" id="sessionDate" required>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <label for="sessionStartTime" class="form-label">Start Time</label>
+              <input type="time" class="form-control" id="sessionStartTime" required>
+            </div>
+            <div class="col">
+              <label for="sessionEndTime" class="form-label">End Time</label>
+              <input type="time" class="form-control" id="sessionEndTime" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="sessionHall" class="form-label">Hall</label>
+            <select class="form-select" id="sessionHall" required>
+              <option value="">Select hall</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="sessionNotes" class="form-label">Notes (Optional)</label>
+            <input type="text" class="form-control" id="sessionNotes" placeholder="Session notes or topics">
+          </div>
+          <button type="submit" class="btn btn-success w-100">Schedule Session</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../js/session.js"></script>
+<script>
+  // Load sidebar
+  $(function() {
+    $('#sidebar-container').load('sidebar.html');
+  });
+</script>
+</body>
+</html>

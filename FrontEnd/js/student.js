@@ -132,6 +132,7 @@ function fetchAndRenderStudents() {
             return;
         }
 
+
         students.forEach(function (student, idx) {
             var initials = getInitials(student.name);
             var statusBadge =
@@ -139,16 +140,13 @@ function fetchAndRenderStudents() {
                     ? '<span class="badge bg-success">active</span>'
                     : '<span class="badge bg-secondary">inactive</span>';
 
-            var courses = (student.courses || [])
-                .map(
-                    (course) =>
-                        `<span class="badge bg-light text-dark border">${course}</span>`
-                )
-                .join(" ");
+            // Placeholder for enrolled courses
+            var coursesHtml = `<span class="text-muted">Loading...</span>`;
+            var cardId = `student-card-${student.id}`;
 
             var card = `
             <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
+                <div class="card h-100 shadow-sm" id="${cardId}">
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-2">
                             <div class="avatar bg-success bg-opacity-10 text-success fw-bold me-3 rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;font-size:1.2rem;">
@@ -163,19 +161,16 @@ function fetchAndRenderStudents() {
                         </div>
                         <div class="mb-2">
                             <i class="bi bi-envelope"></i> ${student.email}<br>
-                            <i class="bi bi-telephone"></i> ${student.telephone || student.phone
-                }
+                            <i class="bi bi-telephone"></i> ${student.telephone || student.phone}
                         </div>
                         <div class="mb-2">
                             <strong>Guardian</strong><br>
-                            <i class="bi bi-person"></i> ${student.guardianName
-                }<br>
-                            <i class="bi bi-telephone"></i> ${student.guardianTelephone || student.guardianPhone
-                }
+                            <i class="bi bi-person"></i> ${student.guardianName}<br>
+                            <i class="bi bi-telephone"></i> ${student.guardianTelephone || student.guardianPhone}
                         </div>
                         <div class="mb-2">
                             <strong>Enrolled Courses</strong><br>
-                            ${courses}
+                            <span class="enrolled-courses-list">${coursesHtml}</span>
                         </div>
                         <div class="d-flex gap-2">
                             <button class="btn btn-outline-primary btn-sm flex-fill view-profile-btn" data-idx="${idx}">View Profile</button>
@@ -186,6 +181,29 @@ function fetchAndRenderStudents() {
             </div>
         `;
             $container.append(card);
+
+            // Fetch enrolled courses for this student
+            $.ajax({
+                url: `http://localhost:8080/api/enrollments/student/${student.id}`,
+                method: 'GET',
+                headers: { Authorization: "Bearer " + token },
+                dataType: 'json',
+                success: function (res) {
+                    var courses = (res.data || res || []);
+                    var html = '';
+                    if (courses.length === 0) {
+                        html = '<span class="text-muted">None</span>';
+                    } else {
+                        html = courses.map(function (enr) {
+                            return `<span class="badge bg-light text-dark border">${enr.courseTitle || enr.title || enr.courseId}</span>`;
+                        }).join(' ');
+                    }
+                    $(`#${cardId} .enrolled-courses-list`).html(html);
+                },
+                error: function () {
+                    $(`#${cardId} .enrolled-courses-list`).html('<span class="text-danger">Failed to load</span>');
+                }
+            });
         });
 
         // Attach click event for View Profile buttons
@@ -223,9 +241,61 @@ function fetchAndRenderStudents() {
           $("#profileQr").attr("src", "https://via.placeholder.com/96?text=QR");
         }
 
-        // Store student id for update/delete
-        $("#studentProfileForm").data("studentId", student.id);
-        $("#studentProfileModal").modal("show");
+                // Store student id for update/delete
+                $("#studentProfileForm").data("studentId", student.id);
+
+                // Populate courses for enrollment
+                $.ajax({
+                    url: "http://localhost:8080/api/courses/all",
+                    method: "GET",
+                    headers: { Authorization: "Bearer " + token },
+                    dataType: "json",
+                    success: function (res) {
+                        var $select = $("#enrollCourseSelect");
+                        $select.empty();
+                        $select.append('<option value="">Select course</option>');
+                        (res.data || res).forEach(function (course) {
+                            $select.append(`<option value="${course.courseId}">${course.title}</option>`);
+                        });
+                    }
+                });
+                // Set today's date as default
+                var today = new Date().toISOString().slice(0, 10);
+                $('#enrollDate').val(today);
+
+                $("#studentProfileModal").modal("show");
+// Enroll in course handler
+$(document).on("click", "#enrollBtn", function () {
+    var studentId = $("#studentProfileForm").data("studentId");
+    var courseId = $("#enrollCourseSelect").val();
+    var enrolledOn = $("#enrollDate").val();
+    if (!studentId || !courseId || !enrolledOn) {
+        Swal.fire('Error', 'Please select a course and date.', 'error');
+        return;
+    }
+    var data = {
+        studentId: studentId,
+        courseId: courseId,
+        active: true,
+        enrolledOn: enrolledOn
+    };
+    $.ajax({
+        url: "http://localhost:8080/api/enrollments/enroll",
+        method: "POST",
+        contentType: "application/json",
+
+        data: JSON.stringify(data),
+        headers: { Authorization: "Bearer " + token },
+        success: function () {
+            Swal.fire('Success', 'Student enrolled in course!', 'success');
+            // Optionally refresh student data or enrolled courses
+            location.reload();
+        },
+        error: function () {
+            Swal.fire('Error', 'Failed to enroll student.', 'error');
+        }
+    });
+});
     }
 
     // Update and Delete button handlers

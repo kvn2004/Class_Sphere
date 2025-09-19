@@ -74,19 +74,26 @@ $(document).ready(function () {
 
     // Edit course
     $(document).on('click', '.edit-course-btn', function () {
-        var course = $(this).data('course');
-        if (typeof course === 'string') course = JSON.parse(course);
-        $('#courseId').val(course.courseId || course.id || '');
-        $('#courseTitle').val(course.title || '');
-        $('#courseSubject').val(course.subjectId || '');
-        $('#courseTeacher').val(course.teacherId || '');
-        $('#courseHall').val(course.hallId || '');
-        $('#effectiveDate').val(course.effectiveDate ? course.effectiveDate.substring(0, 10) : '');
-        $('#classStartMonth').val(course.classStartMonth || '');
-        $('#courseFee').val(course.fee || '');
-        $('#courseStatus').val(course.status || 'active');
-        $('#courseModalLabel').text('Edit Course');
-        $('#courseModal').modal('show');
+    var course = $(this).data('course');
+    if (typeof course === 'string') course = JSON.parse(course);
+    // Set all fields from backend response
+    $('#courseId').val(course.courseId || course.id || '').prop('readonly', true);
+    $('#courseTitle').val(course.title || '').prop('readonly', false);
+    $('#courseSubject').val(course.subjectId || '').prop('disabled', false);
+    $('#courseTeacher').val(course.teacherId || '').prop('disabled', false);
+    $('#courseHall').val(course.defaultHallId || course.hallId || '').prop('disabled', false);
+    $('#effectiveDate').val(course.effectiveDate ? course.effectiveDate.substring(0, 10) : '').prop('readonly', false);
+    $('#classStartMonth').val(course.startMonth ? course.startMonth.substring(0, 7) : '').prop('readonly', false);
+    var feeValue = '';
+    if (course.monthlyFee !== undefined && course.monthlyFee !== null) {
+        feeValue = course.monthlyFee;
+    } else if (course.fee !== undefined && course.fee !== null) {
+        feeValue = course.fee;
+    }
+    $('#courseFee').val(feeValue).prop('readonly', false);
+    $('#courseStatus').val(course.active === false ? 'inactive' : 'active');
+    $('#courseModalLabel').text('Edit Course');
+    $('#courseModal').modal('show');
     });
 
     // Delete course
@@ -103,6 +110,9 @@ $(document).ready(function () {
                 $.ajax({
                     url: `http://localhost:8080/api/courses/${id}`,
                     method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
                     success: function () {
                         fetchAndRenderCourses();
                         Swal.fire('Deleted!', 'Course deleted.', 'success');
