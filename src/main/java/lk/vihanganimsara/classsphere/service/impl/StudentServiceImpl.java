@@ -35,7 +35,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public boolean save(StudentDto dto, MultipartFile photo) throws Exception {
-        //  Save student first (so ID is generated)
         Student student = new Student();
         student.setName(dto.getName());
         student.setEmail(dto.getEmail());
@@ -45,51 +44,43 @@ public class StudentServiceImpl implements StudentService {
         student.setGuardianTelephone(dto.getGuardianTelephone());
         student.setGuardianEmail(dto.getGuardianEmail());
 
-        // unique QR content
         String qrContent = UUID.randomUUID().toString();
         student.setQrCodeContent(qrContent);
 
         Student saved = studentRepository.save(student);
 
-        //  Ensure QR folder exists
-        File dir = new File(qrDirectory);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
+        // QR Code
+        File qrDir = new File("E:/Advanced API Development/SpringBOOT/ClassSphere/qrcodes/");
+        if (!qrDir.exists()) qrDir.mkdirs();
 
-        //  Generate QR file using student ID for filename
-        String fileName = "student_" + saved.getId() + ".png";
-        Path qrFilePath = Paths.get(qrDirectory, fileName);
+        String qrFileName = "student_" + saved.getId() + ".png";
+        Path qrPath = Paths.get(qrDir.getAbsolutePath(), qrFileName);
+        QrGenaratorForStudent.generateQRCodeImage(qrContent, qrPath.toString());
 
-        String qrPath = QrGenaratorForStudent.generateQRCodeImage(qrContent, qrFilePath.toString());
-        saved.setQrCodePath(qrPath);
+        // save relative path for frontend
+        saved.setQrCodePath("/qrcodes/" + qrFileName);
 
-
-        // --- Photo ---
+        // Photo
         if (photo != null && !photo.isEmpty()) {
-            File photoDir = new File("photos/student-photos/");
+            File photoDir = new File("E:/Advanced API Development/SpringBOOT/ClassSphere/photos/student-photos/");
             if (!photoDir.exists()) photoDir.mkdirs();
+
             String photoFileName = "student_" + saved.getId() + "_" + photo.getOriginalFilename();
             Path photoPath = Paths.get(photoDir.getAbsolutePath(), photoFileName);
-            photo.transferTo(photoPath); // save file
-            saved.setPhotoPath(photoPath.toString());
+            photo.transferTo(photoPath);
+
+            saved.setPhotoPath("/photos/student-photos/" + photoFileName);
         }
-        //  Update student with QR path
+
         studentRepository.save(saved);
         return true;
     }
 
     @Override
     public void update(StudentDto dto, MultipartFile photo) throws Exception {
-        // 1. Find existing student
-        Optional<Student> optionalStudent = studentRepository.findById(dto.getId());
-        if (!optionalStudent.isPresent()) {
-            throw new RuntimeException("Student not found with ID: " + dto.getId());
-        }
+        Student student = studentRepository.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        Student student = optionalStudent.get();
-
-        // 2. Update fields
         student.setName(dto.getName());
         student.setEmail(dto.getEmail());
         student.setTelephone(dto.getTelephone());
@@ -98,22 +89,21 @@ public class StudentServiceImpl implements StudentService {
         student.setGuardianTelephone(dto.getGuardianTelephone());
         student.setGuardianEmail(dto.getGuardianEmail());
 
-
-        // 4. Update photo if new one uploaded
+        // Update photo if uploaded
         if (photo != null && !photo.isEmpty()) {
-            File photoDir = new File("photos/student-photos/");
+            File photoDir = new File("E:/Advanced API Development/SpringBOOT/ClassSphere/photos/student-photos/");
             if (!photoDir.exists()) photoDir.mkdirs();
 
             String photoFileName = "student_" + student.getId() + "_" + photo.getOriginalFilename();
             Path photoPath = Paths.get(photoDir.getAbsolutePath(), photoFileName);
+            photo.transferTo(photoPath);
 
-            photo.transferTo(photoPath); // overwrite old photo
-            student.setPhotoPath(photoPath.toString());
+            student.setPhotoPath("/photos/student-photos/" + photoFileName);
         }
 
-        // 5. Save updated student
         studentRepository.save(student);
     }
+
 
     @Override
     public List<StudentDto> getAll() {
@@ -126,7 +116,7 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     public void deleteById(String id) {
         Student student = studentRepository.findById(id).get();
-       // studentRepository.delete(student);
+        // studentRepository.delete(student);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUser = authentication != null ? authentication.getName() : "SYSTEM";

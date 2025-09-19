@@ -130,7 +130,7 @@ public class TeacherServiceImpl implements TeacherService {
         teacherRepo.save(teacher);
 
         AuditLog log = new AuditLog();
-        log.setEntityName("Student");
+        log.setEntityName("TEACHER");
         log.setEntityId(teacher.getId());
         log.setAction("DELETE");
         log.setPerformedBy(currentUser);

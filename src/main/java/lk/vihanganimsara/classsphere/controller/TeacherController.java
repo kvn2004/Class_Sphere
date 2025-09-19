@@ -55,7 +55,7 @@ public class TeacherController {
     @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Student> updateStudent(
             @RequestPart("teacher") String teacherJson,
-            @RequestPart("photo") MultipartFile photo) {
+            @RequestPart(value = "photo",required = false) MultipartFile photo) {
         try {
 
             ObjectMapper mapper = new ObjectMapper();

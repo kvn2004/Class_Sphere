@@ -33,7 +33,7 @@ public class Student {
     private String qrCodePath;
     private String photoPath;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Enrollment> enrollments = new ArrayList<>();
 
     @OneToMany(mappedBy = "student")

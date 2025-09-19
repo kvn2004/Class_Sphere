@@ -1,6 +1,7 @@
 package lk.vihanganimsara.classsphere.service.impl;
 
 import jakarta.transaction.Transactional;
+import lk.vihanganimsara.classsphere.dto.AttendanceDto;
 import lk.vihanganimsara.classsphere.entity.Attendance;
 import lk.vihanganimsara.classsphere.entity.AttendanceStatus;
 import lk.vihanganimsara.classsphere.entity.CourseSession;
@@ -10,10 +11,14 @@ import lk.vihanganimsara.classsphere.repository.ClassSessionsRepo;
 import lk.vihanganimsara.classsphere.repository.StudentRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,12 +63,12 @@ public class AttendanceService {
         }
 
         // 6. Decide attendance status
-        AttendanceStatus status ;
+        AttendanceStatus status;
         if (now.isBefore(session.getStartTime().plusMinutes(20))) {
             status = AttendanceStatus.PRESENT;
         } else if (now.isBefore(session.getEndTime())) {
             status = AttendanceStatus.LATE; // after 10 mins, before end
-        }else {
+        } else {
             status = AttendanceStatus.ABSENT;
         }
         // 7. Save attendance
@@ -82,6 +87,39 @@ public class AttendanceService {
         log.info("Audit: Attendance marked by {}", performedBy);
     }
 
+    public List<AttendanceDto> filterAttendance(String sessionId, String studentId,
+                                                AttendanceStatus status,
+                                                LocalDateTime startDate,
+                                                LocalDateTime endDate) {
+        return attendanceRepo.searchAttendance(sessionId, studentId, status, startDate, endDate)
+                .stream()
+                .map(a -> new AttendanceDto(
+                        a.getAttendanceId(),
+                        a.getSession().getSessionId(),
+                        a.getStudent().getId(),
+                        a.getStatus(),
+                        a.getMarkedAt()
+                ))
+                .toList();
+    }
+
+
+    public List<AttendanceDto> getRecentAttendances(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+
+        return attendanceRepo.findRecentAttendances(pageable)
+                .stream()
+                .map(a -> {
+                    AttendanceDto dto = new AttendanceDto();
+                    dto.setAttendanceId(a.getAttendanceId());
+                    dto.setSessionId(a.getSession() != null ? a.getSession().getSessionId() : null);
+                    dto.setStudentId(a.getStudent() != null ? a.getStudent().getId() : null);
+                    dto.setStatus(a.getStatus()); // enum
+                    dto.setMarkedAt(a.getMarkedAt());
+                    return dto;
+                })
+                .toList();
+    }
 
 }
 

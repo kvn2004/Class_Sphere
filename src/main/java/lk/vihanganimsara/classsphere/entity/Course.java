@@ -1,5 +1,7 @@
 package lk.vihanganimsara.classsphere.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class Course {
+
     @Id
     @GeneratedValue(generator = "id-generator")
     @GenericGenerator(name = "id-generator", strategy = "lk.vihanganimsara.classsphere.util.IdGenerator")
@@ -23,6 +26,7 @@ public class Course {
 
     @ManyToOne
     @JoinColumn(name = "subject_id")
+    @JsonIgnore
     private Subject subject;
 
     @ManyToOne
@@ -38,22 +42,27 @@ public class Course {
     private LocalDate startMonth;
     private Boolean active = true;
 
-    @OneToMany(mappedBy = "course")
+    // CourseSessions depend on the Course → Cascade
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CourseSession> sessions = new ArrayList<>();
 
+    // Enrollment should not be cascaded (student’s enrollment is independent)
     @OneToMany(mappedBy = "course")
     private List<Enrollment> enrollments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "course")
+    // CourseFees belong to Course → Cascade
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CourseFee> fees = new ArrayList<>();
 
-    @OneToMany(mappedBy = "course")
+    // Scholarships belong to Course → Cascade
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Scholarship> scholarships = new ArrayList<>();
 
+    // Payments should not be cascaded (they are financial records)
     @OneToMany(mappedBy = "course")
     private List<Payment> payments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "course")
+    // TeacherPayments belong to Course → Cascade
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TeacherPayment> teacherPayments = new ArrayList<>();
 }
-

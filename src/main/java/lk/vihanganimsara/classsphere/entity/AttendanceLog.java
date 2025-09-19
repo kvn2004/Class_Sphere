@@ -25,5 +25,7 @@ public class AttendanceLog {
     private String method; // "QR" or "MANUAL"
     private String markedBy; // Teacher/Admin/Scanner device
     private LocalDateTime scannedAt = LocalDateTime.now();
+
+
 }
 

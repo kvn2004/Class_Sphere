@@ -18,4 +18,7 @@ public class CourseSessionDto {
     private LocalTime endTime;
     private String hallId;
     private String notes;
+    private String courseTitle;
+
+
 }

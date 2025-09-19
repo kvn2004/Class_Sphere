@@ -45,4 +45,17 @@ public class CourseSessionController {
     public ResponseEntity<List<CourseSessionDto>> findAllByCourse(@PathVariable String courseId) {
         return ResponseEntity.ok(sessionService.findAllByCourse(courseId));
     }
+
+    @GetMapping("/this-week")
+    public ResponseEntity<List<CourseSessionDto>> getSessionsForThisWeek() {
+        return ResponseEntity.ok(sessionService.getSessionsForThisWeek());
+    }
+    @GetMapping("/today")
+    public ResponseEntity<ApiResponse> getTodaySessions() {
+        List<CourseSessionDto> sessions = sessionService.getTodaySessions();
+        return ResponseEntity.ok(
+                new ApiResponse(200, "Today's sessions fetched successfully", sessions)
+        );
+    }
+
 }

@@ -1,9 +1,11 @@
 package lk.vihanganimsara.classsphere.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -12,6 +14,7 @@ import java.time.LocalDate;
 public class CourseDto {
     private String courseId;
     private String title;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startMonth;
     private Boolean active;
 
@@ -24,4 +27,11 @@ public class CourseDto {
 
     private String defaultHallId;
     private String defaultHallName;
+    // NEW fields for fee
+
+    private BigDecimal monthlyFee;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate effectiveDate;
+
+
 }

@@ -8,25 +8,25 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Enrollment")
+@Table(name = "enrollment")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Enrollment {
+
     @EmbeddedId
     private EnrollmentId id = new EnrollmentId();
 
     @ManyToOne
-    @MapsId("studentId")
-    private Student student;
+    @MapsId("courseId")  // use courseId from EnrollmentId
+    @JoinColumn(name = "course_id") // must match table column
+    private Course course;
 
     @ManyToOne
-    @MapsId("courseId")
-    private Course course;
+    @MapsId("studentId")
+    @JoinColumn(name = "student_id")
+    private Student student;
 
     private LocalDate enrolledOn = LocalDate.now();
     private Boolean active = true;
 }
-
-
-

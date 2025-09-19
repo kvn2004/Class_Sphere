@@ -27,7 +27,7 @@ public class Hall {
 
     private Integer capacity;
 
-    @OneToMany(mappedBy = "hall")
+    @OneToMany(mappedBy = "hall" ,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CourseSession> sessions = new ArrayList<>();
 }
 

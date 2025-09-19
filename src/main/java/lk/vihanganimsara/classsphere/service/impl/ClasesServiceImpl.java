@@ -5,6 +5,7 @@ import lk.vihanganimsara.classsphere.dto.CourseDto;
 import lk.vihanganimsara.classsphere.dto.HallDto;
 import lk.vihanganimsara.classsphere.entity.AuditLog;
 import lk.vihanganimsara.classsphere.entity.Course;
+import lk.vihanganimsara.classsphere.entity.CourseFee;
 import lk.vihanganimsara.classsphere.entity.Hall;
 import lk.vihanganimsara.classsphere.repository.*;
 import lk.vihanganimsara.classsphere.service.AuditLogsService;
@@ -41,11 +42,26 @@ public class ClasesServiceImpl implements ClasesService {
         course.setActive(dto.getActive());
         courseRepo.save(course);
 
+
+        // 1) Save course
+        Course savedCourse = courseRepo.save(course);
+
+        // 2) Save course fee
+        if (dto.getMonthlyFee() != null && dto.getEffectiveDate() != null) {
+            CourseFee fee = new CourseFee();
+            fee.setCourse(savedCourse);
+            fee.setMonthlyFee(dto.getMonthlyFee());
+            fee.setEffectiveDate(dto.getEffectiveDate());
+            savedCourse.getFees().add(fee); // maintain relationship
+        }
+
+        courseRepo.save(savedCourse); // save both course + fee (cascade if set)
+
         auditLogsService.logAction(
                 "Course/Clases",
-                course.getCourseId(),
+                savedCourse.getCourseId(),
                 "CREATE",
-                "Created subject: " + course.getTitle()
+                "Created course with fee: " + savedCourse.getTitle()
         );
 
     }
@@ -61,13 +77,22 @@ public class ClasesServiceImpl implements ClasesService {
         course.setStartMonth(dto.getStartMonth());
         course.setActive(dto.getActive());
 
+        // if fee details are present, add new CourseFee record
+        if (dto.getMonthlyFee() != null && dto.getEffectiveDate() != null) {
+            CourseFee fee = new CourseFee();
+            fee.setCourse(course);
+            fee.setMonthlyFee(dto.getMonthlyFee());
+            fee.setEffectiveDate(dto.getEffectiveDate());
+            course.getFees().add(fee); // cascade ALL nisa auto-save wenawa
+        }
+
         courseRepo.save(course);
 
         auditLogsService.logAction(
                 "Course/Clases",
                 course.getCourseId(),
                 "UPDATE",
-                "Update subject: " + course.getTitle()
+                "Updated course: " + course.getTitle()
         );
     }
 

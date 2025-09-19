@@ -3,6 +3,7 @@ package lk.vihanganimsara.classsphere.service.impl;
 import jakarta.transaction.Transactional;
 import lk.vihanganimsara.classsphere.dto.SubjectDto;
 import lk.vihanganimsara.classsphere.dto.TeacherDto;
+import lk.vihanganimsara.classsphere.dto.getSubjectDto;
 import lk.vihanganimsara.classsphere.entity.AuditLog;
 import lk.vihanganimsara.classsphere.entity.Subject;
 import lk.vihanganimsara.classsphere.entity.Teacher;
@@ -85,9 +86,10 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<SubjectDto> getAll() {
+    public List<getSubjectDto> getAll() {
         List<Subject> all = subjectRepo.findAll();
-        return modelMapper.map(all, new TypeToken<List<Subject>>() {
-        }.getType());
+        return all.stream()
+                .map(s -> new getSubjectDto(s.getSubjectId(), s.getSubjectName(), s.getGradeLevel()))
+                .toList();
     }
 }

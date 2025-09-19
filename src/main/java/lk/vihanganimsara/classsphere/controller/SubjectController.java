@@ -1,9 +1,6 @@
 package lk.vihanganimsara.classsphere.controller;
 
-import lk.vihanganimsara.classsphere.dto.ApiResponse;
-import lk.vihanganimsara.classsphere.dto.HallDto;
-import lk.vihanganimsara.classsphere.dto.StudentDto;
-import lk.vihanganimsara.classsphere.dto.SubjectDto;
+import lk.vihanganimsara.classsphere.dto.*;
 import lk.vihanganimsara.classsphere.service.HallService;
 import lk.vihanganimsara.classsphere.service.SubjectService;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +59,7 @@ public class SubjectController {
 
     @GetMapping(value = "/all")
     public ResponseEntity<ApiResponse> getAllStudents() {
-        List<SubjectDto> all = subjectService.getAll();
+        List<getSubjectDto> all = subjectService.getAll();
         if (all == null) {
             log.error("error while getting all subjects");
         } else {

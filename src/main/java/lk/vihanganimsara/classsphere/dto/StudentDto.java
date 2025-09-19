@@ -17,5 +17,9 @@ public class StudentDto {
     private String guardianName;
     private String guardianTelephone;
     private String guardianEmail;
-//    private MultipartFile photo;
+    private String photoPath;
+    private String qrCodePath;
+    private String qrCodeContent;
+
+
 }
